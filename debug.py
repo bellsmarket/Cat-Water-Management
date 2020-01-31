@@ -108,43 +108,37 @@ iPhoneWeight = 188
 # iPhoneCar = 124400
 # iPhoneCar = 800000
 # iPhoneCar = 1417694
-# iPhoneCar = -1560977
+iPhoneCar = -143487
 
 # iPhoneCar = 19000
 
-# caribration = iPhoneCar / iPhoneWeight
+caribration = iPhoneCar / iPhoneWeight
 
-# hx.set_reference_unit(caribration)
-hx.set_reference_unit(-750)
+hx.set_reference_unit(caribration)
+# hx.set_reference_unit(-750)
 # hx.set_reference_unit(referenceUnit)
 # hx.set_reference_unit(1)
+
 # hx.set_reference_unit(11087)
 # -------------------------------------------------------------------------
 hx.reset()
 
 # hx.tare()
-
-print("日時・室温・湿度・水の量を測量しています。")
-
-# to use both channels, you'll need to tare them both
-#hx.tare_A()
-#hx.tare_B()
+print("デバッグ用プログラム・重さは容器の量を含めて計測します。")
+data = [record_time, str(data['temp']), str(data['humi'])]  
 tmp = 0
 array = []
+correction_value = 2536 - 90 
+
 while True:
     try:
-        water = hx.get_weight(1) - 2596 - bowl
+
+        water = hx.get_weight(1) - correction_value - bowl -30
         standard_point  = hx.get_weight(1)
-        errorrange = hx.get_weight(1) - 2596
-
+        errorrange = hx.get_weight(1) - correction_value
         if tmp != water:
-            print("水の量は" + str(abs(water + 188)) + "gです。")
-        # print("tmp" + str(tmp))
-        # print("重さは" + str(water))
-
+            print("全体の重量:" + str(abs(water + 188))  + "g\t"+ "水の重量：" + str(abs(water)) + "g")
         array.append(water)
-
-
         hx.power_down()
         hx.power_up()
         time.sleep(0.3)
@@ -162,4 +156,3 @@ while True:
         cleanAndExit()
 
 
-data = [record_time, str(data['temp']), str(data['humi']), str(water), str(standard_point), str(errorrange)]

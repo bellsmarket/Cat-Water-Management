@@ -89,17 +89,21 @@ iPhoneWeight = 188
 # iPhoneCar = 124400
 # iPhoneCar = 800000
 # iPhoneCar = 1417694
-# iPhoneCar = -1560977
+iPhoneCar = -143487
 
 # iPhoneCar = 19000
 
-# caribration = iPhoneCar / iPhoneWeight
+caribration = iPhoneCar / iPhoneWeight
 
-# hx.set_reference_unit(caribration)
-hx.set_reference_unit(-750)
+hx.set_reference_unit(caribration)
 # hx.set_reference_unit(referenceUnit)
 # hx.set_reference_unit(1)
 # hx.set_reference_unit(11087)
+
+# hx.set_reference_unit(-750)
+correction_value = 2536 - 90
+
+
 # -------------------------------------------------------------------------
 hx.reset()
 # hx.tare() //計測時に0gに合わせる場合にはこのメソッドを使用する
@@ -107,9 +111,9 @@ hx.reset()
 print("日時・室温・湿度・水の量を測量しています。")
 
 # 各種パラメーター
-water = hx.get_weight(1) - 2596 - bowl
+water = hx.get_weight(1) - correction_value - bowl - 30
 standard_point  = hx.get_weight(1)
-errorrange = hx.get_weight(1) - 2596
+errorrange = hx.get_weight(1) - correction_value
 
 print("水の量は" + str(water) + "gです")
 
@@ -120,15 +124,20 @@ data = [record_time, str(data['temp']), str(data['humi']), str(water), str(stand
 
 alert = "猫ちゃんのお水が少なくなってきました。水の量は" + str(water) + "gです"
 subject = "Cat Manegement Alert!!"
-if  water < 10:
-    print(alert)
-    mymodule.mail_alert.send_mail(alert,subject)
-else:
-    print("まだまだ十分お水はあります。")
+
+while True:
+    if  -10 < water < 10:
+        print(alert)
+        mymodule.mail_alert.send_mail(alert,subject)
+    else:
+        print("まだまだ十分お水はあります。")
+
+    if -100 < water < 500:
+      with open(CSV, "a") as f:
+          w = csv.writer(f, lineterminator='\n')
+          w.writerow(data)
 
 
-with open(CSV, "a") as f:
-    w = csv.writer(f, lineterminator='\n')
-    w.writerow(data)
 
-cleanAndExit()
+
+    cleanAndExit()
