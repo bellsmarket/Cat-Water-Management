@@ -101,7 +101,7 @@ hx.set_reference_unit(caribration)
 # hx.set_reference_unit(11087)
 
 # hx.set_reference_unit(-750)
-correction_value = 2536 - 90
+correction_value = 2536 - 80
 
 
 # -------------------------------------------------------------------------
@@ -111,7 +111,7 @@ hx.reset()
 print("日時・室温・湿度・水の量を測量しています。")
 
 # 各種パラメーター
-water = hx.get_weight(1) - correction_value - bowl - 30
+water = hx.get_weight(1) - correction_value - bowl
 standard_point  = hx.get_weight(1)
 errorrange = hx.get_weight(1) - correction_value
 

@@ -128,16 +128,17 @@ print("デバッグ用プログラム・重さは容器の量を含めて計測�
 data = [record_time, str(data['temp']), str(data['humi'])]  
 tmp = 0
 array = []
-correction_value = 2536 - 90 
+correction_value = 2536 - 80
 
 while True:
     try:
 
-        water = hx.get_weight(1) - correction_value - bowl -30
+        water = hx.get_weight(1) - correction_value - bowl
         standard_point  = hx.get_weight(1)
         errorrange = hx.get_weight(1) - correction_value
-        if tmp != water:
-            print("全体の重量:" + str(abs(water + 188))  + "g\t"+ "水の重量：" + str(abs(water)) + "g")
+        #if tmp != water:
+        #    print("全体の重量:" + str(abs(water + bowl))  + "g\t"+ "水の重量：" + str(abs(water)) + "g")
+        print("全体の重量:" + str(abs(water + bowl))  + "g\t"+ "水の重量：" + str(abs(water)) + "g")
         array.append(water)
         hx.power_down()
         hx.power_up()
