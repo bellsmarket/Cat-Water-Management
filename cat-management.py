@@ -78,30 +78,22 @@ hx.set_reading_format("MSB", "MSB")
 
 
 #+_ 1-2g程度の誤差まで追い込んでいる
-#ベルの水の器の重さ    218g
-bowl = 218
+#ベルの水の器の重さ    230g
+bowl = 230
 
 
-#キャリブレーション用に正確な重さのオブジェクト(iPhone 7使用)
-#iPhone 7 Plus  188g    117000
+#キャリブレーション用に正確な重さのオブジェクト(iPhone7 Plusで計測)
+#iPhone 7 Plus  188g    Average 181300
 
-iPhoneWeight = 188
-# iPhoneCar = 124400
-# iPhoneCar = 800000
-# iPhoneCar = 1417694
-iPhoneCar = -143487
+iPhone_weight = 188
+iPhone_raw_value = -181300
 
-# iPhoneCar = 19000
+calibration_value = iPhone_raw_value / iPhone_weight
 
-caribration = iPhoneCar / iPhoneWeight
-
-hx.set_reference_unit(caribration)
 # hx.set_reference_unit(referenceUnit)
-# hx.set_reference_unit(1)
-# hx.set_reference_unit(11087)
+hx.set_reference_unit(calibration_value)
 
-# hx.set_reference_unit(-750)
-correction_value = 2536 - 80
+correction_value = 1869
 
 
 # -------------------------------------------------------------------------
@@ -113,16 +105,16 @@ print("日時・室温・湿度・水の量を測量しています。")
 # 各種パラメーター
 water = hx.get_weight(1) - correction_value - bowl
 standard_point  = hx.get_weight(1)
-errorrange = hx.get_weight(1) - correction_value
+total_weight = hx.get_weight(1) - correction_value
 
 print("水の量は" + str(water) + "gです")
 
-data = [record_time, str(data['temp']), str(data['humi']), str(water), str(standard_point), str(errorrange)]
+data = [record_time, str(data['temp']), str(data['humi']), str(water), str(standard_point), str(total_weight)]
 
 # ループしたい場合には下記に追記する
 # for v in data:
 
-alert = "猫ちゃんのお水が少なくなってきました。水の量は" + str(water) + "gです"
+alert = "ベルの水が少なくなってきました。水の量は" + str(water) + "gです"
 subject = "Cat Manegement Alert!!"
 
 while True:

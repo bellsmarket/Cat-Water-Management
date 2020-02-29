@@ -97,48 +97,38 @@ hx.set_reading_format("MSB", "MSB")
 
 
 #+_ 1-2g程度の誤差まで追い込んでいる
-#ベルの水の器の重さ    218g
-bowl = 218
+#ベルの水の器の重さ    230g
+bowl = 230
 
 
-#キャリブレーション用に正確な重さのオブジェクト(iPhone 7使用)
-#iPhone 7 Plus  188g    117000
+#キャリブレーション用に正確な重さのオブジェクト(iPhone7 Plusで計測)
+#iPhone 7 Plus  188g    Average 181300
 
-iPhoneWeight = 188
-# iPhoneCar = 124400
-# iPhoneCar = 800000
-# iPhoneCar = 1417694
-iPhoneCar = -143487
+iPhone_weight = 188
+iPhone_raw_value = -181300
 
-# iPhoneCar = 19000
+calibration_value = iPhone_raw_value / iPhone_weight
 
-caribration = iPhoneCar / iPhoneWeight
-
-hx.set_reference_unit(caribration)
-# hx.set_reference_unit(-750)
 # hx.set_reference_unit(referenceUnit)
-# hx.set_reference_unit(1)
-
-# hx.set_reference_unit(11087)
+hx.set_reference_unit(calibration_value)
 # -------------------------------------------------------------------------
 hx.reset()
 
 # hx.tare()
 print("デバッグ用プログラム・重さは容器の量を含めて計測します。")
-data = [record_time, str(data['temp']), str(data['humi'])]  
+data = [record_time, str(data['temp']), str(data['humi'])]
 tmp = 0
 array = []
-correction_value = 2536 - 80
+correction_value = 1869
 
 while True:
     try:
+        total_weight = hx.get_weight(1) - correction_value
 
         water = hx.get_weight(1) - correction_value - bowl
         standard_point  = hx.get_weight(1)
-        errorrange = hx.get_weight(1) - correction_value
-        #if tmp != water:
-        #    print("全体の重量:" + str(abs(water + bowl))  + "g\t"+ "水の重量：" + str(abs(water)) + "g")
-        print("全体の重量:" + str(abs(water + bowl))  + "g\t"+ "水の重量：" + str(abs(water)) + "g")
+        
+        print("全体の重量:" + str(total_weight)  + "g\t"+ "水の重量：" + str(total_weight - bowl) + "g")
         array.append(water)
         hx.power_down()
         hx.power_up()
@@ -155,5 +145,3 @@ while True:
 
         print(ave)
         cleanAndExit()
-
-
